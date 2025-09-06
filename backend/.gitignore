@@ -1,0 +1,32 @@
+# Entorno virtual
+venv/
+ENV/
+env/
+
+# Archivos de configuración sensibles
+.env
+
+# Base de datos local
+diario.db
+
+# Archivos y carpetas de Python generados automáticamente
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Archivos de test y resultados
+*.sqlite3
+*.log
+
+# Archivos de VS Code y otros IDEs
+.vscode/
+.idea/
+
+# Archivos de dependencias
+*.egg-info/
+dist/
+build/
+
+# Otros archivos temporales
+*.bak
