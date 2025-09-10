@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import List, Dict
 from pysentimiento import create_analyzer
 import google.generativeai as genai
-from app.core.config import settings  # Importación absoluta
+from app.core.config import settings
 
 genai.configure(api_key=settings.GEMINI_API_KEY)
 

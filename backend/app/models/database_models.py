@@ -15,6 +15,7 @@ class JournalEntry(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     
     def to_dict(self):
+        """Convierte la instancia del modelo a un diccionario"""
         return {
             "id": self.id,
             "user_id": self.user_id,

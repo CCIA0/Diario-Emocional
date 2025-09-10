@@ -1,11 +1,12 @@
-# Requirements actualizados - Febrero 2024
+# backend/requirements.txt
 fastapi==0.111.0
 uvicorn[standard]==0.30.4
 pydantic==2.8.0
-pysentimiento==0.7.3  # Versión más reciente y compatible
+pysentimiento==0.7.3
 google-generativeai==0.3.2
 python-multipart==0.0.9
 python-dotenv==1.0.1
 sqlalchemy==2.0.30
-transformers==4.40.0  # Dependencia importante para pysentimiento
-torch==2.2.1  # Dependencia de ML
+transformers==4.40.0
+torch==2.2.1
+numpy==1.26.4  # ← VERSIÓN COMPATIBLE CON TORCH

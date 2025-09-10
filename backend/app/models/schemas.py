@@ -30,7 +30,10 @@ class JournalEntryResponse(BaseModel):
     created_at: datetime
 
 class DashboardResponse(BaseModel):
+    total_users: int
     total_entries: int
-    sentiment_distribution: Dict[str, int]
-    emotion_distribution: Dict[str, int]
-    recent_activity: list
+    avg_sentiment_score: float
+    entries_last_week: int
+    sentiment_distribution: List[Dict[str, Any]]
+    top_emotions: List[Dict[str, Any]]
+    users_stats: List[Dict[str, Any]]
