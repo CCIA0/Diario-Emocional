@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .core.config import settings
 from .api.endpoints import journal, dashboard
 from .database import create_tables
+import os
 
 # Crear tablas al iniciar
 create_tables()
@@ -12,10 +13,21 @@ app = FastAPI(
     version=settings.VERSION
 )
 
+# Configurar CORS para desarrollo y producción
+allowed_origins = [
+    "http://localhost:4200",  # Desarrollo local
+    "https://*.vercel.app",   # Vercel subdomains
+    settings.FRONTEND_URL     # URL específica de producción
+]
+
+# En producción, permitir todos los orígenes de Vercel por seguridad
+if os.getenv("ENVIRONMENT") == "production":
+    allowed_origins.append("https://*.vercel.app")
+
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
