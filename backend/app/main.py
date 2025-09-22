@@ -15,14 +15,17 @@ app = FastAPI(
 
 # Configurar CORS para desarrollo y producción
 allowed_origins = [
-    "http://localhost:4200",  # Desarrollo local
-    "https://*.vercel.app",   # Vercel subdomains
-    settings.FRONTEND_URL     # URL específica de producción
+    "http://localhost:4200",                    # Desarrollo local
+    "https://diario-emocional-eight.vercel.app", # Frontend en Vercel
+    settings.FRONTEND_URL                       # URL específica de configuración
 ]
 
-# En producción, permitir todos los orígenes de Vercel por seguridad
+# En producción, permitir orígenes específicos
 if os.getenv("ENVIRONMENT") == "production":
-    allowed_origins.append("https://*.vercel.app")
+    allowed_origins.extend([
+        "https://diario-emocional-eight.vercel.app",
+        "https://*.vercel.app"
+    ])
 
 # CORS
 app.add_middleware(
