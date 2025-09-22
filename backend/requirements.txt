@@ -1,12 +1,12 @@
-# backend/requirements.txt
+# backend/requirements.txt - Versión simplificada para deploy inicial
 fastapi==0.111.0
 uvicorn[standard]==0.30.4
 pydantic==2.8.0
-pysentimiento==0.7.3
 google-generativeai==0.3.2
 python-multipart==0.0.9
 python-dotenv==1.0.1
 sqlalchemy==2.0.30
-transformers==4.40.0
-torch>=2.0.0,<3.0.0  # Versión flexible de torch
-numpy>=1.24.0,<2.0.0  # Versión compatible
+# Temporalmente removidas para evitar problemas de compilación en Render:
+# pysentimiento==0.7.3  # Requiere Rust
+# transformers==4.40.0  # Pesado para plan free
+# torch>=2.0.0,<3.0.0   # Pesado para plan free

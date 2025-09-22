@@ -1,13 +1,9 @@
 from pydantic import BaseModel
 from typing import List, Dict
-from pysentimiento import create_analyzer
 import google.generativeai as genai
 from app.core.config import settings
 
 genai.configure(api_key=settings.GEMINI_API_KEY)
-
-sentiment_analyzer = create_analyzer(task="sentiment", lang="es")
-emotion_analyzer = create_analyzer(task="emotion", lang="es")
 
 class SentimentAnalysisResult(BaseModel):
     sentiment: str
@@ -16,18 +12,66 @@ class SentimentAnalysisResult(BaseModel):
 class AIService:
     @staticmethod
     def analyze_sentiment(text: str) -> dict:
-        sentiment_result = sentiment_analyzer.predict(text)
-        emotion_result = emotion_analyzer.predict(text)
-        return {
-            "sentiment": {
-                "label": sentiment_result.output,
-                "probabilities": sentiment_result.probas
-            },
-            "emotion": {
-                "label": emotion_result.output,
-                "probabilities": emotion_result.probas
+        """
+        Análisis de sentimientos usando Gemini AI (versión simplificada para deploy)
+        Temporalmente sin pysentimiento para evitar problemas de compilación
+        """
+        try:
+            # Usar Gemini para análisis básico de sentimientos
+            prompt = f"""
+            Analiza el sentimiento y emoción del siguiente texto en español.
+            Responde SOLO en formato JSON con esta estructura exacta:
+            {{
+                "sentiment": {{"label": "POS|NEU|NEG", "confidence": 0.95}},
+                "emotion": {{"label": "joy|sadness|anger|fear|surprise|disgust", "confidence": 0.90}}
+            }}
+            
+            Texto: "{text}"
+            """
+            
+            model = genai.GenerativeModel("gemini-1.5-flash-latest")
+            response = model.generate_content(prompt)
+            
+            # Parsear respuesta de Gemini (simplificado)
+            import json
+            try:
+                result = json.loads(response.text.strip())
+                return {
+                    "sentiment": {
+                        "label": result["sentiment"]["label"],
+                        "probabilities": {result["sentiment"]["label"]: result["sentiment"]["confidence"]}
+                    },
+                    "emotion": {
+                        "label": result["emotion"]["label"], 
+                        "probabilities": {result["emotion"]["label"]: result["emotion"]["confidence"]}
+                    }
+                }
+            except (json.JSONDecodeError, KeyError):
+                # Fallback si el parsing falla
+                return {
+                    "sentiment": {
+                        "label": "NEU",
+                        "probabilities": {"NEU": 0.8}
+                    },
+                    "emotion": {
+                        "label": "neutral",
+                        "probabilities": {"neutral": 0.8}
+                    }
+                }
+                
+        except Exception as e:
+            print(f"Error en análisis de sentimientos: {e}")
+            # Fallback en caso de error
+            return {
+                "sentiment": {
+                    "label": "NEU",
+                    "probabilities": {"NEU": 0.5}
+                },
+                "emotion": {
+                    "label": "neutral", 
+                    "probabilities": {"neutral": 0.5}
+                }
             }
-        }
 
     @staticmethod
     def generate_feedback(user_text: str) -> str:
@@ -42,11 +86,7 @@ class AIService:
             model = genai.GenerativeModel("gemini-1.5-flash-latest")
             response = model.generate_content(prompt)
             return response.text.strip()
-        except Exception as e:
-            return f"Gracias por compartir tus pensamientos. Es importante reflexionar sobre lo que sentimos. Error: {str(e)}"
+        except Exception:
+            return "Gracias por compartir tus pensamientos. Es importante reflexionar sobre lo que sentimos."
 
 ai_service = AIService()
-
-# Example usage
-# result = ai_service.analyze_sentiment("I love programming!")
-# print(result)
