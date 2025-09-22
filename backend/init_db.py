@@ -12,6 +12,7 @@ sys.path.append(str(Path(__file__).parent))
 
 from app.database import create_tables, engine
 from app.core.config import settings
+from sqlalchemy import text
 
 def init_database():
     """Inicializar la base de datos en producción"""
@@ -27,7 +28,7 @@ def init_database():
         
         # Verificar que las tablas se crearon
         with engine.connect() as conn:
-            result = conn.execute("SELECT name FROM sqlite_master WHERE type='table';")
+            result = conn.execute(text("SELECT name FROM sqlite_master WHERE type='table';"))
             tables = [row[0] for row in result]
             print(f"✅ Tablas creadas: {tables}")
         
